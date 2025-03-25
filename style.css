@@ -19,13 +19,13 @@ h1 {
 
 header {
     display: flex;
-    align-items: center; /* Alinha verticalmente */
-    justify-content: center; /* Centraliza os itens no cabeçalho */
-    gap: 1rem; /* Espaço entre a logo e o texto */
+    align-items: center; 
+    justify-content: center; 
+    gap: 1rem; 
 }
 
 #logo {
-    width: 80px; /* Ajuste o tamanho conforme necessário */
+    width: 80px; 
     height: auto;
 }
 
@@ -84,11 +84,17 @@ section button {
 }
 
 footer {
-    background-color: #F5F7F8;
-    color: #45474B;
+    background-color: #d0dcee;
+    color: #2e2a2a;
     text-align: center;
-    padding: 1rem;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 16px;
     width: 100%;
-    position: fixed;
-    bottom: 0;
+    position: relative;
+}
+
+footer p {
+    margin: 5px 0;
+    color: #000;
 }
