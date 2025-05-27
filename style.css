@@ -330,10 +330,10 @@ nav {
 }
 
 .product__card img {
-  max-width: 100%; /* A imagem ocupa no máximo 100% da largura do contêiner */
-  height: auto; /* Mantém a proporção da imagem */
-  object-fit: contain; /* Faz com que a imagem se ajuste dentro do contêiner sem distorção */
- 
+  max-width: 100%;
+  max-height: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .product__card img:hover {
