@@ -1,154 +1,121 @@
-// Menu Mobile
-const menuBtn = document.getElementById("menu-btn");
-const navLinks = document.getElementById("nav-links");
-const menuBtnIcon = menuBtn.querySelector("i");
+ //VOCÊ DEVE SUBSTITUIR A URL ABAIXO PELA URL DO IMPORT SEU PROJETO NO FIREBASE (CONFIGURAÇÕES CDN DO SEU PROJETO)
+ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-menuBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-    const isOpen = navLinks.classList.contains("open");
-    menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
-});
+ //VOCÊ DEVE SUBSTITUIR OS CÓDIGOS ABAIXOS CÓDIGOS DO SEU PROJETO NO FIREBASE (FIREBASE CONFIGURATION)
+ const firebaseConfig = {
+    apiKey: "AIzaSyCe4iYHsApW4RpCl8-v0NgtUZP15RCcqsk",
+    authDomain: "firestore-bcfb7.firebaseapp.com",
+    databaseURL: "https://firestore-bcfb7-default-rtdb.firebaseio.com",
+    projectId: "firestore-bcfb7",
+    storageBucket: "firestore-bcfb7.appspot.com",
+    messagingSenderId: "405005781101",
+    appId: "1:405005781101:web:b7a64ef31fc86721a69764"
+ };
 
-navLinks.addEventListener("click", (e) => {
-    if (e.target.tagName !== "A") return;
-    navLinks.classList.remove("open");
-    menuBtnIcon.setAttribute("class", "ri-menu-line");
-});
+ // Initialize Firebase
+ const app = initializeApp(firebaseConfig);
+
+ //VOCÊ DEVE SUBSTITUIR AO FINAL DA URL AS PALAVRAS FIREBASE-APP POR FIREBASE-DATABASE
+ import { getDatabase, ref, child, get, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 
+ const db = getDatabase();
 
-// Modal de Login
-const loginBtn = document.getElementById("loginBtn");
-const loginModal = document.getElementById("loginModal");
-const closeModal = document.querySelector(".close-modal");
+//  CAMPOS DE ENTRADAS DOS VALORES DO CADASTRO DE PRODUTOS
+ let codigo = document.getElementById('codigo');
+ let produto =document.getElementById('produto');
+ let categoria =document.getElementById('categoria');
+ let quantidade =document.getElementById('quantidade');
+ let valor =document.getElementById('valor');
 
-if (loginBtn) {
-    loginBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        loginModal.style.display = "flex";
-    });
-}
+//CAMPO DE PESQUISA E ATUALIZAÇÃO DOS PRODUTOS
+ let idProduto = document.getElementById('idProduto');
 
-if (closeModal) {
-    closeModal.addEventListener("click", () => {
-        loginModal.style.display = "none";
-    });
-}
+//RESULTADOS DAS PESQUISAS
+ let dadoProduto = document.getElementById('dadoProduto');
+ let dadoCategoria = document.getElementById('dadoCategoria');
+ let dadoQuantidade = document.getElementById('dadoQuantidade');
+ let dadoValor = document.getElementById('dadoValor');
 
-window.addEventListener("click", (e) => {
-    if (e.target === loginModal) {
-        loginModal.style.display = "none";
-    }
-});
+//BOTÕES DOS CAMPOS DE PESQUISA
+ let cadastrarProduto = document.getElementById('cadastrarProduto');
+ let buscarProduto = document.getElementById('buscarProduto');
+ let atualizarProduto = document.getElementById('atualizarProduto');
+ let deletarProduto = document.getElementById('deletarProduto');
 
-// Firebase Authentication
-const firebaseConfig = {
-    apiKey: "AIzaSyC3MqZIkbIZvOH3auioEUZu9skvsfh_WHY",
-    authDomain: "controle-58d26.firebaseapp.com",
-    projectId: "controle-58d26",
-    storageBucket: "controle-58d26.appspot.com",
-    messagingSenderId: "342449654332",
-    appId: "1:342449654332:web:4f3aad81bd874e984e9139"
-};
+//ADICIONAR PRODUTO
+ function AddProduto(){
+    set(ref(db,'Produto/'+codigo.value),{
+        codigo: codigo.value,
+        produto: produto.value,
+        categoria: categoria.value,
+        quantidade: quantidade.value,
+        valor: valor.value
+    }).then(()=>{
+        codigo.value = ''
+        produto.value=''
+        categoria.value=''
+        quantidade.value=''
+        valor.value=''
+        alert("Produto Cadastrado!");
+    }).catch((error)=>{
+        console.log(error);
+        alert('Produto Não Cadastrado!');
+    })
 
-firebase.initializeApp(firebaseConfig);
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+ }
 
-const userProfile = document.getElementById("userProfile");
-const userEmail = document.getElementById("userEmail");
-const logoutBtn = document.getElementById("logoutBtn");
-const loginForm = document.querySelector(".login-form");
-
-firebase.auth().onAuthStateChanged(function(user) {
-    updateAuthUI(user);
-});
-
-function updateAuthUI(user) {
-    if (user) {
-        if (loginBtn) loginBtn.style.display = "none";
-        if (userProfile) {
-            userProfile.style.display = "flex";
-            if (userEmail) userEmail.textContent = user.email.split("@")[0];
+ //FUNCÃO PARA PESQUISA DE PRODUTOS COM BASE NO CÓDIGO DO PRODUTO => idProduto
+ function PesquisarProduto(){
+    const dbRef = ref(db);
+    get(child(dbRef,'Produto/'+idProduto.value)).then((snapshot)=>{
+        if(snapshot.exists()){
+            dadoProduto.value = snapshot.val().produto;
+            dadoCategoria.value = snapshot.val().categoria;
+            dadoQuantidade.value = snapshot.val().quantidade;
+            dadoValor.value = ('R$ ')+parseFloat (snapshot.val().valor).toFixed(2);
+            alert('Produto Localizado!')
+        }else{
+            alert("O produto não existe");
         }
-        localStorage.setItem("userEmail", user.email);
-    } else {
-        if (loginBtn) loginBtn.style.display = "flex";
-        if (userProfile) userProfile.style.display = "none";
-        localStorage.removeItem("userEmail");
-    }
+    }).then(()=>{
+        alert('Leitura Realizada!')
+    }).catch((e)=>{
+        alert('Algo deu errado!')
+        console.log(e)
+    })
+ }
+
+ //FUNÇÃO PARA ATUALIZAÇÃO DAS INFORMAÇÕES ACERCA DO PRODUTO
+function AtualizarProdutos(){
+    update(ref(db,'Produto/'+idProduto.value),{
+        produto:dadoProduto.value,
+        categoria:dadoCategoria.value,
+        quantidade:dadoQuantidade.value,
+        valor:dadoValor.value
+    }).then(()=>{
+        alert('Produto Atualizado!');
+    }).catch((e)=>{
+        alert('Algo deu errado!')
+        console.log(e)
+    })
 }
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        firebase.auth().signOut().then(() => {
-            window.location.reload();
-        });
-    });
+//FUNÇÃO PARA DELETAR PRODUTO
+function DeletarProdutos(){
+    remove(ref(db,'Produto/'+idProduto.value)).
+    then(()=>{
+        idProduto.value=''
+        dadoProduto.value=''
+        dadoCategoria.value=''
+        dadoQuantidade.value=''
+        dadoValor.value=''
+        alert('Produto Deletado!')
+    })
 }
 
-if (loginForm) {
-    loginForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                loginModal.style.display = "none";
-                window.location.reload();
-            })
-            .catch((error) => {
-                alert(getErrorMessage(error));
-            });
-    });
-}
-
-function getErrorMessage(error) {
-    switch (error.code) {
-        case "auth/user-not-found":
-            return "Usuário não encontrado";
-        case "auth/wrong-password":
-            return "Senha incorreta";
-        case "auth/invalid-email":
-            return "E-mail inválido";
-        default:
-            return "Erro ao fazer login: " + error.message;
-    }
-}
-
-function formatarPreco(preco) {
-    return preco.toFixed(2).replace(".", ",");
-}
-
-
-
-
-
-// Filtros de categoria
-document.querySelectorAll(".filter-btn").forEach(btn => {
-    btn.addEventListener("click", function() {
-        const categoria = this.getAttribute("data-cat");
-        const produtosFiltrados = filtrarPorCategoria(categoria);
-        carregarProdutos(produtosFiltrados);
-
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        this.classList.add("active");
-    });
-});
-
-// Inicialização
-document.addEventListener("DOMContentLoaded", function() {
-    // Verifica se há usuário logado
-    const savedEmail = localStorage.getItem("userEmail");
-    if (savedEmail) {
-        const user = { email: savedEmail };
-        updateAuthUI(user);
-    }
-
-    // Carrega produtos (usando a função do dados.js)
-    if (typeof produtos !== 'undefined') {
-        carregarProdutos(produtos);
-    }
-});
-
+//MÉTODOS PARA UTILIZAÇÃO DAS FUNÇÕES COM BASE NAS AÇÕES DOS BOTÕES
+cadastrarProduto.addEventListener('click',AddProduto);
+buscarProduto.addEventListener('click',PesquisarProduto);
+atualizarProduto.addEventListener('click',AtualizarProdutos);
+deletarProduto.addEventListener('click',DeletarProdutos);
