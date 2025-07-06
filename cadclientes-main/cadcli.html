@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Clientes</title>
+    <link rel="stylesheet" href="cadcli.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Seção de Cadastro -->
+        <div class="section">
+            <h1>CADASTRO DE CLIENTES</h1>
+            <form id="formCadastroCliente">
+                <input type="text" id="idCliente" placeholder="ID do Cliente" required>
+                <input type="text" id="nomeCliente" placeholder="Nome Completo" required>
+                <input type="email" id="emailCliente" placeholder="E-mail" required>
+                <input type="tel" id="telefoneCliente" placeholder="Telefone" required>
+                <input type="text" id="enderecoCliente" placeholder="Endereço" required>
+                <input type="submit" value="Cadastrar Cliente" class="btn-cadastrar">
+            </form>
+        </div>
+
+        <!-- Seção de Busca e Atualização -->
+        <div class="section">
+            <h1>BUSCA E ATUALIZAÇÃO</h1>
+            <form id="formBuscaCliente">
+                <input type="text" id="buscaIdCliente" placeholder="ID do Cliente" required>
+                <button type="button" id="btnBuscarCliente" class="btn-buscar">Buscar Cliente</button>
+
+                <input type="text" id="dadoNomeCliente" placeholder="Nome">
+                <input type="email" id="dadoEmailCliente" placeholder="E-mail">
+                <input type="tel" id="dadoTelefoneCliente" placeholder="Telefone">
+                <input type="text" id="dadoEnderecoCliente" placeholder="Endereço">
+                
+                <div class="action-buttons">
+                    <button type="button" id="btnAtualizarCliente" class="btn-atualizar">Atualizar</button>
+                    <button type="button" id="btnDeletarCliente" class="btn-deletar">Deletar</button>
+                    <button type="button" id="btnLimparCliente" class="btn-limpar">Limpar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Link para página de produtos -->
+        <div class="nav-link">
+            <a href="index.html">Ir para Gestão de Produtos →</a>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
